@@ -1,22 +1,23 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
 <head>
   	<title>Get Me to Safety!</title>
-    	<link href="https://fonts.googleapis.com/css?family=Amatic+SC|Architects+Daughter|Boogaloo|Comfortaa|Handlee|Patrick+Hand|Poiret+One|Quicksand|Shadows+Into+Light" rel="stylesheet">
-  		<link rel="stylesheet" href="CSS/main.css">
+      <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Architects+Daughter|Boogaloo|Comfortaa|Handlee|Patrick+Hand|Poiret+One|Quicksand|Shadows+Into+Light" rel="stylesheet">
+  	<link rel="stylesheet" href="main.css">
+  	<link rel="stylesheet" href="CSS/main.css">
 		<link rel="stylesheet" href="CSS/chosen.min.css">
 </head>
 
 <body>
  <div class="boxInput">
     <h1>Get Me to Safety!</h1>
-	<div class="numbers">
-		<h2></h2>
-	</div>
-    <p class="instructions">An app for Americans abroad. Select the country in which you are currently residing, and we will give you the number(s) to call in an emergency.</p>
+	<h2></h2>
+	<p class="embassy"></p>
+		<address></address>
+		<p class="getDirections"></p>
+    <p class="instructions">An app for Americans abroad. Type in your location, and we will give you the number to call in an emergency and  directions to the closest American embassy.</p>
 	<form id="search-term">
-		<select data-placeholder="Choose a Country" id="query" name="iso">
-			<option value="Null"></option>
+		<select id="query" name="iso">
 			<option value="AD">Andorra</option>
 			<option value="AE">United Arab Emirates</option>
 			<option value="AF">Afghanistan</option>
@@ -271,10 +272,8 @@
   	</form>`
 </div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script type="text/javascript" src="JS/jquery.ajax-cross-origin.min.js"></script>
-<script type="text/javascript" src="JS/chosen.jquery.min.js"></script>
-<script type="text/javascript" src="JS/chosen.proto.min.js"></script>
-<script type="text/javascript" src="JS/app.js"></script>
+<script type="text/javascript"  src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.ajax-cross-origin.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
 </body>
 </html>

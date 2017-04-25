@@ -1,7 +1,7 @@
 //STATE OBJECT
 var state = {
     eNumAPI: {
-        url: 'https://emergencynumberapi.com/api/country/',
+        url: 'http://emergencynumberapi.com/api/country/',
         emergencyNumberData: ''
     },
     embassyDirectionsAPI: {
@@ -23,19 +23,21 @@ function getRequest(){
     console.log('getRequest', searchTerm);
 //   state.eNumAPI.params.q = searchTerm;
   $.ajax({
-        crossOrigin: true,
-        url: state.eNumAPI.url + searchTerm,
-        success: function (data) {
-            data = JSON.parse(data);
-            console.log('success',data);
-            state.eNumAPI.emergencyNumberData = data.data;
-            render();
-        },
-        error: function(data){
-            alert('Something Went Wrong!')
-        }
+    crossOrigin: true,
+     url: state.eNumAPI.url + searchTerm,
+    success: function (data) {
+      data = JSON.parse(data);
+      console.log('success',data);
+      state.eNumAPI.emergencyNumberData = data.data;
+      render();
+    },
+    error:function(data){
+      alert('Something Went Wrong!')
+    }
   });
 };
+
+//Will need to write a function for if there is an error.
 
 //DOM FUNCTIONS
 function render(){
@@ -48,21 +50,18 @@ function render(){
       if( $('h2').length){ $('h2').append('<br/><br/>'); }
       $('h2').append('Call ' + state.eNumAPI.emergencyNumberData.ambulance.all[0] + ' if you have an emergency involving a fire');
     }
-     if(state.eNumAPI.emergencyNumberData.police.all[0].length){
-      if( $('h2').length){ $('h2').append('<br/><br/>'); }
-      $('h2').append('Call ' + state.eNumAPI.emergencyNumberData.police.all[0] + ' if you have an emergency and need the police');
-     }
+    $('h2').append('<br/><br/>(etc)');
     // $('.embassy').html('Address of the American embassy in ' + state.params.q)
-    $('instructions').append('For directions to the US Embassy click on the Get Directions button')
+    $('getDirections').html('For directions to the US Embassy click on the Get Directions button')
     // $('.instructions').replace('To get the emergency number and directions to an American embassy in a different location, enter the city and country below and click submit.')
 };
 
 
 //EVENT LISTENERS
-//make sure to add an event listener and function to narrow down search. look for other methods on this
+//add an event listener and function to narrow down search. look for other methods on this
 
 var searchTerm = $('#query').val();
-// $('select').chosen();
+//when user hits submit the value of their input gets passed to the getRequest function (above)
 $('#search-term').submit(function(event){
   event.preventDefault();
   event.stopPropagation();
@@ -72,4 +71,3 @@ $('#search-term').submit(function(event){
   $('#query').val("");
   return false;
 });
-
