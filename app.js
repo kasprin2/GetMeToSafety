@@ -7,21 +7,21 @@ var state = {
     embassyDirectionsAPI: {
         params: {
             part: '',
-            q: ''
+            q: '',
+            mapKey: '&key=AIzaSyAY_xCg4frGNv6lfl5b2jpsiPJwlitNN2U'
         },
-        url: '',
-        address: {
-            street: '',
-            city: '',
-            country: ''
+        baseURL: 'https://maps.googleapis.com/maps/api/staticmap?center=American+Embassy+',
+        center: '',
+        size: '&size=640x400',
+        marker: {
+          position: 'American Embassy'
+        }
         },
-    }
 };
 
 //STATE FUNCTIONS
-function getRequest(){
+function getENum(){
     console.log('getRequest', searchTerm);
-//   state.eNumAPI.params.q = searchTerm;
   $.ajax({
     crossOrigin: true,
      url: state.eNumAPI.url + searchTerm,
@@ -32,33 +32,67 @@ function getRequest(){
       render();
     },
     error:function(data){
+      console.log(data);
       alert('Something Went Wrong!')
     }
   });
 };
 
-//Will need to write a function for if there is an error.
+function getEmbassy() {
+  // state.embassyDirectionsAPI.center = searchTerm;
+  $.getJSON(
+    'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCjKNWgjJz26C98ZKo-W-U4tJyur96DNWY&address=American+Embassy,+'+state.embassyDirectionsAPI.isoCode+searchTerm,
+    function(data) {
+      console.log(data);
+    }
+    ) 
+  console.log(state.embassyDirectionsAPI.isoCode);
+  }
+
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('googleMap'), {
+    zoom: 16,
+    center: new google.maps.LatLng(-33.91722, 151.23064),
+    mapTypeId: 'roadmap'
+  });
+}      
 
 //DOM FUNCTIONS
 function render(){
-    // $('h1').replace('Information for ' + state.params.q);
-    $('h2').html('');
-    if(state.eNumAPI.emergencyNumberData.ambulance.all[0].length){
-      $('h2').append('Call ' + state.eNumAPI.emergencyNumberData.ambulance.all[0] + ' if you have an emergency requiring an ambulance');
-    }
-    if(state.eNumAPI.emergencyNumberData.fire.all[0].length){
-      if( $('h2').length){ $('h2').append('<br/><br/>'); }
-      $('h2').append('Call ' + state.eNumAPI.emergencyNumberData.ambulance.all[0] + ' if you have an emergency involving a fire');
-    }
-    $('h2').append('<br/><br/>(etc)');
-    // $('.embassy').html('Address of the American embassy in ' + state.params.q)
-    $('getDirections').html('For directions to the US Embassy click on the Get Directions button')
-    // $('.instructions').replace('To get the emergency number and directions to an American embassy in a different location, enter the city and country below and click submit.')
+  $('#countryName').html('Country Selected: ' + state.eNumAPI.emergencyNumberData.country.name).append('<br/><br/>');
+  $('.numbersInput').fadeIn(400);
+  // $('img').attr('src', state.embassyDirectionsAPI.baseURL+state.embassyDirectionsAPI.center+state.embassyDirectionsAPI.size+state.embassyDirectionsAPI.params.mapKey);
+  initMap();
+
+  $('.instructions').html('Wrong country? Select the correct country in which you are residing, and we will give you the number(s) to call in case of an emergency.')
+  $('.numbers').html('');
+  if(state.eNumAPI.emergencyNumberData.ambulance.all[0].length){
+    $('.numbers').append('Call <a href="tel:state.eNumAPI.emergencyNumberData.ambulance.all[0]">' + state.eNumAPI.emergencyNumberData.ambulance.all[0] + ' </a> if you have an emergency requiring an ambulance.');
+  }
+  if(state.eNumAPI.emergencyNumberData.fire.all[0].length){
+    if( $('.numbers').text().length){ $('.numbers').append('<br/><br/>'); }
+    $('.numbers').append('Call <a href="tel:state.eNumAPI.emergencyNumberData.fire.all[0]"> ' + state.eNumAPI.emergencyNumberData.fire.all[0] + ' </a> if you have an emergency involving a fire.');
+  }
+  if(state.eNumAPI.emergencyNumberData.police.all[0].length){
+    if( $('.numbers').text().length){ $('.numbers').append('<br/><br/>'); } 
+    $('.numbers').append('Call <a href="tel:state.eNumAPI.emergencyNumberData.police.all[0]"> ' + state.eNumAPI.emergencyNumberData.police.all[0] + ' </a> if you have an emergency and need the police.');
+  }
+  if(state.eNumAPI.emergencyNumberData.dispatch.all &&
+    state.eNumAPI.emergencyNumberData.dispatch.all[0].length){
+    if( $('.numbers').text().length){ $('.numbers').append('<br/><br/>'); }
+    $('.numbers').append('Call <a href="tel:state.eNumAPI.emergencyNumberData.dispatch.all[0]"> ' + state.eNumAPI.emergencyNumberData.dispatch.all[0] + ' </a> if you have an emergency.');
+  }
+ if(state.eNumAPI.emergencyNumberData.dispatch.fixed &&
+    state.eNumAPI.emergencyNumberData.dispatch.fixed[0].length){
+  console.log($('.numbers').length)
+    if( $('.numbers').text().length){ $('.numbers').append('<br/><br/>'); }
+    $('.numbers').append('Call <a href="tel:state.eNumAPI.emergencyNumberData.dispatch.fixed[0]">' + state.eNumAPI.emergencyNumberData.dispatch.fixed[0] + ' </a>if you have an emergency.');
+  }
 };
 
 
 //EVENT LISTENERS
-//add an event listener and function to narrow down search. look for other methods on this
 
 var searchTerm = $('#query').val();
 //when user hits submit the value of their input gets passed to the getRequest function (above)
@@ -67,7 +101,8 @@ $('#search-term').submit(function(event){
   event.stopPropagation();
   searchTerm = $('#query').val();
   console.log(searchTerm);
-  getRequest();
+  getENum();
+  getEmbassy();
   $('#query').val("");
   return false;
 });
